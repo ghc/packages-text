@@ -28,8 +28,6 @@ import Data.Text.Internal.Builder.Int.Digits (digits)
 import Data.Text.Array
 import Data.Word (Word, Word8, Word16, Word32, Word64)
 import GHC.Base (quotInt, remInt)
-import GHC.Num (quotRemInteger)
-import GHC.Types (Int(..))
 import Control.Monad.ST
 #if MIN_VERSION_base(4,11,0)
 import Prelude hiding ((<>))
@@ -37,6 +35,8 @@ import Prelude hiding ((<>))
 
 #ifdef  __GLASGOW_HASKELL__
 # if defined(INTEGER_GMP)
+import GHC.Types (Int(..))
+import GHC.Num (quotRemInteger)
 import GHC.Integer.GMP.Internals (Integer(S#))
 # elif defined(INTEGER_SIMPLE)
 import GHC.Integer
