@@ -211,7 +211,7 @@ module Data.Text.Lazy
 import Prelude (Char, Bool(..), Maybe(..), String,
                 Eq(..), Ord(..), Ordering(..), Read(..), Show(..),
                 (&&), (||), (+), (-), (.), ($), (++),
-                error, flip, fmap, fromIntegral, not, otherwise, quot)
+                error, flip, fmap, fromIntegral, not, otherwise, quot, (=<<))
 import qualified Prelude as P
 import Control.DeepSeq (NFData(..))
 import Data.Int (Int64)
@@ -247,6 +247,7 @@ import qualified GHC.Base as GHC
 import qualified GHC.Exts as Exts
 #endif
 import GHC.Prim (Addr#)
+import qualified Language.Haskell.TH as TH
 import qualified Language.Haskell.TH.Lib as TH
 import qualified Language.Haskell.TH.Syntax as TH
 #if MIN_VERSION_base(4,7,0)
@@ -416,7 +417,7 @@ instance Data Text where
 instance TH.Lift Text where
   lift = TH.appE (TH.varE 'pack) . TH.stringE . unpack
 #if MIN_VERSION_template_haskell(2,16,0)
-  liftTyped = TH.unsafeTExpCoerce . TH.lift
+  liftTyped x = TH.typecheck =<< TH.lift x
 #endif
 
 #if MIN_VERSION_base(4,7,0)

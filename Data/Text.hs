@@ -219,7 +219,7 @@ import Control.Exception (assert)
 import Data.Char (isSpace)
 import Data.Data (Data(gfoldl, toConstr, gunfold, dataTypeOf), constrIndex,
                   Constr, mkConstr, DataType, mkDataType, Fixity(Prefix))
-import Control.Monad (foldM)
+import Control.Monad (foldM, (=<<))
 import Control.Monad.ST (ST)
 import qualified Data.Text.Array as A
 import qualified Data.List as L
@@ -255,6 +255,7 @@ import qualified GHC.Exts as Exts
 #endif
 import qualified Language.Haskell.TH.Lib as TH
 import qualified Language.Haskell.TH.Syntax as TH
+import qualified Language.Haskell.TH.Lift as TH
 #if MIN_VERSION_base(4,7,0)
 import Text.Printf (PrintfArg, formatArg, formatString)
 #endif
@@ -431,7 +432,7 @@ instance Data Text where
 instance TH.Lift Text where
   lift = TH.appE (TH.varE 'pack) . TH.stringE . unpack
 #if MIN_VERSION_template_haskell(2,16,0)
-  liftTyped = TH.unsafeTExpCoerce . TH.lift
+  liftTyped x = TH.typecheck =<< TH.lift x
 #endif
 
 #if MIN_VERSION_base(4,7,0)
